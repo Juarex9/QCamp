@@ -50,6 +50,18 @@ foto → OCR_LATIN (texto + confidence)
 
 Si el 1B se inventa 12 toneladas, `save_remito` o el gate del runtime lo paran. El operador ve `raw_ocr` y edita. Eso es el juicio humano que el 1° premio pide *además* del agente.
 
+## Hardware y latencia (completar en el video)
+
+| Campo | Valor |
+|-------|--------|
+| Modelo LLM | Llama 3.2 1B Instruct, Q4_0 (`LLAMA_3_2_1B_INST_Q4_0`) |
+| OCR | `OCR_LATIN` (CRAFT / Latin recognizer) |
+| RAM de modelo (guía del brief) | 1B Q4 ≪ 4 GB; techo 4B Q4 ≈ 4 GB |
+| Máquina de la demo | anotar en [submit.md](submit.md) al grabar |
+| Latencia OCR / 2 turnos | **no medida en repo** — decirla en el video |
+
 ## Gap (no es la elección del modelo)
 
-La elección está alineada. Falta **probarla en vivo**: pesos de `OCR_LATIN` + Llama todavía no se bajaron; pytest mockea el worker. Hasta `REMITO_QVAC=1` + una foto real, el argumento de “1B fiable” es arquitectura, no evidencia.
+La elección está alineada. Falta **probarla en vivo**: pesos de `OCR_LATIN` + Llama todavía no se bajaron; pytest mockea el worker. Hasta `REMITO_QVAC=1` + una foto (fixture y, mejor, una real), el argumento de “1B fiable” es arquitectura, no evidencia.
+
+Envío: [submit.md](submit.md). Mapa a premios: [cobertura.md](cobertura.md).

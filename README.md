@@ -1,71 +1,116 @@
 # Qcamp
 
-Agente local para remitos / tickets de balanza (NOA). Foto → OCR+LLM en
-localhost → JSON tipado → fila → totales. Cero cloud LLM. Bind solo
-`127.0.0.1`. **MVP en notebook/PC** (app móvil fuera de alcance por ahora).
+Agente **local** que lee un ticket de balanza (foto) y deja kg / patente / fecha
+en SQLite. Inferencia solo QVAC on-device. Cero cloud LLM. El productor
+confirma o edita; el 1B no inventa toneladas.
 
-## Demo en 3 minutos
+Aleph Hackathon 2026 · track QVAC. Demo del jurado = **video local** (async),
+no una URL en la nube.
 
-Happy path del jurado: **upload → fila → `/resumen`**, sin internet
-(después del setup).
+## Para el jurado (empezá acá)
+
+| Qué | Dónde |
+|-----|--------|
+| OCR + load de modelos | [`app/qvac_client.py`](https://github.com/Juarex9/QCamp/blob/main/app/qvac_client.py) — `startup`, `ocr` |
+| Agente 2 turnos (extract → save) | [`app/qvac_client.py`](https://github.com/Juarex9/QCamp/blob/main/app/qvac_client.py#L257) — `run_document_agent` |
+| Tools (sin IO / con INSERT) | [`app/tools.py`](https://github.com/Juarex9/QCamp/blob/main/app/tools.py#L181) — `extract_remito`, `save_remito` |
+| Foto → OCR → agente → fila | [`app/main.py`](https://github.com/Juarex9/QCamp/blob/main/app/main.py#L443) — `POST /remitos` |
+| Por qué 1B + OCR separado | [docs/modelos.md](docs/modelos.md) |
+| Mapa al brief | [docs/cobertura.md](docs/cobertura.md) |
+| Brief oficial | [docs/qvac-track.md](docs/qvac-track.md) |
+
+**SDK:** `tetherto-qvac-sdk` (Python) + worker `@qvac/sdk` 0.17.1.  
+**Modelos:** `OCR_LATIN` + `LLAMA_3_2_1B_INST_Q4_0` (`tools: True`, `temp: 0.1`).  
+**No usamos** el HTTP OpenAI-compat de QVAC como camino principal: el premio
+2° pide tool calling nativo.
+
+## Quick path (3 minutos, localhost)
 
 | Min | Qué | Cómo |
 |-----|-----|------|
 | 0:00 | Arrancar | `make demo` |
-| 0:20 | Abrir UI | http://127.0.0.1:8000 (landing) → **Abrir la app** = `/app` |
+| 0:20 | UI | http://127.0.0.1:8000 → **Abrir la app** (`/app`) |
 | 0:40 | Subir ticket | `fixtures/tickets/remito-soja-tucuman.png` |
-| 1:30 | Confirmar | Revisar campos (o editar) y **Confirmar** / **Guardar remito** |
-| 2:00 | Ver fila | La tabla lista patente, kg, producto |
+| 1:30 | Confirmar | Revisar campos y **Guardar remito** |
+| 2:00 | Fila | Tabla: patente, kg, producto |
 | 2:30 | Totales | http://127.0.0.1:8000/resumen — `SUM(tonelaje_kg)` |
 
 ```bash
 make demo
-# equivalente: bash scripts/demo.sh
-# uvicorn queda en 127.0.0.1:8000 (nunca 0.0.0.0)
+# uvicorn en 127.0.0.1:8000 (nunca 0.0.0.0 en local)
 ```
 
-Banner en la UI: `ocr_ready` / `llm_ready`. Si ambos son `false`, el
-formulario manual sigue andando (degradado).
+Banner: `ocr_ready` / `llm_ready`. Si ambos son `false`, el formulario
+manual sigue andando (degradado). CSS 100% local: landing también en
+modo avión.
 
-Rutas: `/` es la landing (pitch, sin estado) y `/app` es la herramienta
-(captura, tabla, totales). Todo el CSS es local: no hay webfonts ni CDN,
-así que la landing también carga en modo avión.
+## Instalar (clone limpio, con red una vez)
 
-## Airplane mode
-
-La demo **debe** completar ingest + query con el host sin red. La red
-solo se usa **una vez** para instalar.
-
-| Momento | Red | Qué hacer |
-|---------|-----|-----------|
-| Setup (una vez) | ON | venv + deps + `install-worker` (modelos quedan en disco) |
-| Demo jurado | OFF | `make demo` → upload fixture → fila → `/resumen` |
-| Sin worker | OFF | `REMITO_QVAC=0 make demo` → mismo upload o form + seed |
-
-Comprobar que no hay cloud: el proceso escucha `127.0.0.1`; no hay
-llamadas a APIs de LLM. Tools: `extract_remito` (sin IO) y
-`save_remito` (INSERT) son **dos** tools.
-
-Atajo sin foto: `python scripts/seed_demo.py` carga los 3 tickets
-sintéticos y `/resumen` ya muestra 58500 kg.
-
-## Instalar (primera vez, con red)
-
-Requisitos: Python ≥ 3.11, Node ≥ 22.17 (solo para el worker QVAC).
+Python ≥ 3.11. Node ≥ 22.17 solo para el worker QVAC.
 
 ```bash
+git clone git@github.com:Juarex9/QCamp.git
+cd QCamp
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
 python -m tetherto.qvac_sdk install-worker
+REMITO_QVAC=1 make demo
 ```
 
-`install-worker` hace `npm install @qvac/sdk` en
-`~/.cache/qvac/worker/<version>` (acá: **0.17.1**, ya instalado). El
-primer `REMITO_QVAC=1` todavía baja los pesos de `OCR_LATIN` +
-`LLAMA_3_2_1B_INST_Q4_0` (eso sí puede ser grande). Si no hay red o
-falla el boot de modelos, seguir con `REMITO_QVAC=0` — UI y SQLite
-andan igual.
+`install-worker` instala `@qvac/sdk` en `~/.cache/qvac/worker/`. El
+**primer** `REMITO_QVAC=1` baja los pesos de `OCR_LATIN` + Llama 1B Q4
+(puede ser grande). Sin red o si falla el boot: `REMITO_QVAC=0 make demo`
+— UI y SQLite andan igual.
+
+Tests (no arrancan el worker):
+
+```bash
+.venv/bin/pytest
+.venv/bin/ruff check .
+```
+
+## Airplane mode
+
+La red solo se usa **una vez** para instalar. La demo del jurado debe
+cerrar ingest + query **sin internet**.
+
+| Momento | Red | Qué hacer |
+|---------|-----|-----------|
+| Setup | ON | venv + deps + `install-worker` + primer load de pesos |
+| Demo | OFF | `REMITO_QVAC=1 make demo` → upload → fila → `/resumen` |
+| Sin modelos | OFF | `REMITO_QVAC=0 make demo` → form o `python scripts/seed_demo.py` |
+
+Comprobar que no hay cloud: el proceso escucha `127.0.0.1`; no hay
+API keys de LLM. Tools: `extract_remito` (sin IO) y `save_remito`
+(INSERT) son **dos** tools. Si el 1B cambia el kg del extract, no hay
+INSERT (`invented` → el operador edita).
+
+Atajo sin foto: `python scripts/seed_demo.py` → 3 filas, `/resumen` = 58500 kg.
+
+## Modelos y hardware
+
+| Rol | Constante QVAC | Notas |
+|-----|----------------|-------|
+| Visión → texto | `OCR_LATIN` | EasyOCR/CRAFT. El 1B no mira la foto. |
+| Agente / tools | `LLAMA_3_2_1B_INST_Q4_0` | 1B instruct Q4_0. Piso del brief 1–4B. |
+
+Máquina de desarrollo / demo: notebook Linux, Python 3.11+. Latencia
+OCR + 2 turnos LLM: **medir en el video** (aún no hay número en repo).
+Un 1B Q4 entra holgado en ~4 GB de RAM de modelo; el techo del brief
+para 4B Q4 es ~4 GB.
+
+Detalle y alternativas descartadas: [docs/modelos.md](docs/modelos.md).
+
+## Qué está probado (honestidad)
+
+| Afirmación | Estado |
+|------------|--------|
+| UI, SQLite, tools, gates, duplicados | Cubierto por pytest (64 tests, worker mockeado) |
+| Worker `@qvac/sdk` 0.17.1 | Instalado en setup local |
+| Pesos OCR + Llama + foto real | **Pendiente de corrida en vivo** (`REMITO_QVAC=1`) |
+| Tasa de acierto en N corridas | No medida todavía |
+| Deploy cloud (Render/Vercel) | Opcional. El jurado no lo necesita |
 
 ## Variables
 
@@ -73,10 +118,10 @@ andan igual.
 |----------|---------|--------|
 | `REMITO_QVAC=1` | (fuera de pytest: intenta worker) | OCR + LLM locales |
 | `REMITO_QVAC=0` | tests lo fuerzan | Formulario / seed; `ocr_ready=false` |
-| `REMITO_DB_PATH` | `data/remitos.db` | SQLite local (gitignored) |
+| `REMITO_DB_PATH` | `data/remitos.db` | SQLite (gitignored) |
 | `REMITO_IMAGES_DIR` | `data/images/` | Fotos subidas (gitignored) |
 
-## Tickets sintéticos
+## Tickets de demo
 
 Tres PNGs en `fixtures/tickets/`. **No son remitos reales.**
 
@@ -88,30 +133,16 @@ Tres PNGs en `fixtures/tickets/`. **No son remitos reales.**
 
 Regenerar: `python scripts/gen_synthetic_tickets.py`.
 
-Brief oficial del track (premios): [docs/track.md](docs/track.md).  
-Hoja de pulido (cómo lo cubre Qcamp): [docs/qvac-track.md](docs/qvac-track.md).  
-Por qué `OCR_LATIN` + Llama 3.2 1B Q4: [docs/modelos.md](docs/modelos.md).  
-Pitch (usuario = productor, **dispositivo = notebook/PC**): [docs/pitch.md](docs/pitch.md).  
-Deploy presentación (**Render** backend + **Vercel** landing): [docs/deploy.md](docs/deploy.md).
+## Docs
 
-## DoraHacks / Aleph
+Índice: [docs/README.md](docs/README.md).
 
-| Criterio | Cómo se ve en esta demo |
-|----------|-------------------------|
-| Greenfield | Código escrito de cero. No hay copia de Zafra ni VitisTrust. |
-| Inferencia local | Worker QVAC en este host. `OCR_LATIN` + `LLAMA_3_2_1B_INST_Q4_0`. |
-| Tool use | LLM llama `extract_remito` y, aparte, `save_remito`. JSON tipado. |
-| Offline | Airplane mode: upload → fila → totales sin cloud. |
-| Localhost | FastAPI **solo** `127.0.0.1`. |
-
-El envío a DoraHacks lo hace una persona (riesgo Alto). Este repo no
-automatiza submit.
-
-## Tests
-
-```bash
-.venv/bin/pytest
-.venv/bin/ruff check .
-```
-
-Pytest nunca arranca el worker (`REMITO_QVAC=0` en `tests/conftest.py`).
+| Doc | Para qué |
+|-----|----------|
+| [docs/submit.md](docs/submit.md) | Envío DoraHacks + guion de video |
+| [docs/cobertura.md](docs/cobertura.md) | Cómo Qcamp cubre 1° y 2° premio |
+| [docs/pitch.md](docs/pitch.md) | Usuario = productor, dispositivo = notebook |
+| [docs/arquitectura.md](docs/arquitectura.md) | Mapa de archivos |
+| [docs/modelos.md](docs/modelos.md) | Por qué OCR + 1B Q4 |
+| [docs/qvac-track.md](docs/qvac-track.md) | Brief oficial del track |
+| [docs/deploy.md](docs/deploy.md) | Render/Vercel (opcional, no es el producto) |

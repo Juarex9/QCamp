@@ -24,3 +24,7 @@ Agente local QVAC para logística agrícola (remitos / tickets de balanza) en el
 ## Artefactos SDD
 
 Engram topic keys `sdd/agro-qvac-local/*`. No crear `openspec/` salvo pedido.
+
+## Docs (jurado)
+
+Índice en `docs/README.md`. Envío DoraHacks: `docs/submit.md` (humano; riesgo Alto).

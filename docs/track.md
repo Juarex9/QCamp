@@ -1,3 +1,6 @@
+> Extracto de premios. Brief completo: [qvac-track.md](qvac-track.md).
+> Qcamp vs premios: [cobertura.md](cobertura.md).
+
 QVAC by Tether is a local AI SDK. It runs models entirely on the user's device (no cloud, no API keys, no data leaving the machine) through a single unified interface in JavaScript/TypeScript (@qvac/sdk) or Python (tetherto-qvac-sdk). The same code runs on Linux, macOS, Windows, Android and iOS.
 
 One SDK covers text generation, embeddings, RAG, fine-tuning, multimodal, OCR, transcription, text-to-speech, translation and more. It's open source (Apache 2.0), and if you'd rather not learn a new API at all, QVAC ships an HTTP server with an OpenAI-compatible endpoint; point any existing AI tool at localhost and it works out of the box.

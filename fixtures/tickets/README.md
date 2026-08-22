@@ -1,8 +1,10 @@
 # Tickets de demo (sintéticos)
 
 Estas tres imágenes **no son remitos reales**. Son PNGs generados para
-el happy path del jurado (upload → fila → `/resumen`) sin fotografiar
-papel de campo.
+el happy path (upload → fila → `/resumen`) sin fotografiar papel de campo.
+
+El brief QVAC pide inputs sucios, no un solo cherry-pick. En el video:
+usar al menos **un fixture distinto** o, mejor, una foto real de ticket.
 
 | Archivo | Producto | kg | Patente | Origen → destino |
 |---------|----------|----|---------|------------------|

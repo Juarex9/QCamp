@@ -42,10 +42,12 @@ No el remito AFIP (CUIT, Pto. Vta.): eso es oficina.
 - 1° back-office: deja de anotar tickets a mano para saber cuánto salió hoy.
 - 2° tool use: extract → save; kg inventado no se persiste.
 
-## Presentación online (jurado)
+## Cómo lo ve el jurado
 
-- **Render:** app completa (`/app`, API, SQLite).
-- **Vercel:** landing con link a Render.
-- **Notebook:** demo QVAC + modo avión (producto real). Ver [deploy.md](deploy.md).
+El brief es **async**: video local + repo. No hace falta URL cloud.
 
-Más contexto: [qvac-track.md](qvac-track.md) · modelos: [modelos.md](modelos.md) · brief: [track.md](track.md) · deploy: [deploy.md](deploy.md).
+- **Video / notebook:** airplane mode → upload → fila → `/resumen`. Eso es el producto.
+- **Repo:** permalinks en el [README](../README.md).
+- **Render / Vercel:** opcional, maqueta sin QVAC. Ver [deploy.md](deploy.md).
+
+Más contexto: [cobertura.md](cobertura.md) · [modelos.md](modelos.md) · brief: [qvac-track.md](qvac-track.md) · envío: [submit.md](submit.md).

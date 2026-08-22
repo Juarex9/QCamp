@@ -1,6 +1,10 @@
-# Deploy — Vercel + Render
+# Deploy — Vercel + Render (opcional)
 
-Presentación online para el jurado. **El producto offline (QVAC + modo avión) sigue siendo `make demo` en notebook.**
+**No es el envío.** El jurado QVAC mira video local + repo
+([submit.md](submit.md)). Render/Vercel solo sirven si alguien quiere
+clickear la UI **sin** el agente (formulario + seed, `REMITO_QVAC=0`).
+
+El producto offline (QVAC + modo avión) sigue siendo `make demo` en notebook.
 
 ## Arquitectura
 
