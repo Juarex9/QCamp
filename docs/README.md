@@ -1,7 +1,7 @@
 # Docs — Qcamp
 
-El jurado arranca en el [README](../README.md) (permalinks + setup).
-Esto es el resto, ordenado.
+El [README](../README.md) presenta **Qcamp** (qué es, para quién, cómo correrlo).
+Pitch, brief y envío viven acá.
 
 ## Envío y pitch
 

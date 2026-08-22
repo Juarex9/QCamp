@@ -47,7 +47,7 @@ No el remito AFIP (CUIT, Pto. Vta.): eso es oficina.
 El brief es **async**: video local + repo. No hace falta URL cloud.
 
 - **Video / notebook:** airplane mode → upload → fila → `/resumen`. Eso es el producto.
-- **Repo:** permalinks en el [README](../README.md).
+- **Repo:** permalinks en [submit.md](submit.md). El README presenta el producto.
 - **Render / Vercel:** opcional, maqueta sin QVAC. Ver [deploy.md](deploy.md).
 
 Más contexto: [cobertura.md](cobertura.md) · [modelos.md](modelos.md) · brief: [qvac-track.md](qvac-track.md) · envío: [submit.md](submit.md).

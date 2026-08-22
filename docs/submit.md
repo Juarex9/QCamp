@@ -9,7 +9,7 @@ riesgo Alto). Este repo no automatiza el submit.
 ## Quick path
 
 1. Repo público: https://github.com/Juarex9/QCamp
-2. README con modelos + permalinks (ya en la raíz).
+2. README de producto + este doc (permalinks y video).
 3. Video local: airplane mode → upload → fila → `/resumen`.
 4. En DoraHacks: pegar repo, video, 1 párrafo de pitch, permalinks.
 
