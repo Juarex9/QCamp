@@ -1,0 +1,33 @@
+<tr id="remito-{{ remito.id }}" class="remito-row">
+  <td class="fecha">{{ remito.fecha or "" }}</td>
+  <td class="patente">{{ remito.patente or "" }}</td>
+  <td class="kg">{{ remito.tonelaje_kg | kg }} kg</td>
+  <td class="producto">{{ remito.producto or "" }}</td>
+  <td class="origen">{{ remito.origen or "" }}</td>
+  <td class="destino">{{ remito.destino or "" }}</td>
+  <td>
+    <details class="editor">
+      <summary>Editar</summary>
+      <form
+        class="edit-form"
+        method="post"
+        action="/remitos/{{ remito.id }}"
+        hx-post="/remitos/{{ remito.id }}"
+        hx-target="#remito-{{ remito.id }}"
+        hx-swap="outerHTML"
+      >
+        <label>fecha<input name="fecha" value="{{ remito.fecha or '' }}"></label>
+        <label>patente<input name="patente" value="{{ remito.patente or '' }}"></label>
+        <label>kg<input name="tonelaje_kg" value="{{ remito.tonelaje_kg | kg }}"></label>
+        <label>origen<input name="origen" value="{{ remito.origen or '' }}"></label>
+        <label>destino<input name="destino" value="{{ remito.destino or '' }}"></label>
+        <label>producto<input name="producto" value="{{ remito.producto or '' }}"></label>
+        <label>humedad<input name="humedad" value="{{ remito.humedad or '' }}"></label>
+        <button class="btn btn--sm" type="submit">Confirmar</button>
+      </form>
+      {% if remito.raw_ocr %}
+      <pre class="raw-ocr">{{ remito.raw_ocr }}</pre>
+      {% endif %}
+    </details>
+  </td>
+</tr>

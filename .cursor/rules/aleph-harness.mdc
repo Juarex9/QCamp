@@ -1,0 +1,36 @@
+---
+description: Harness de ejecución Aleph — el agente decide y orquesta sin pausas salvo casos Alto.
+alwaysApply: true
+---
+
+# Aleph Harness (proyecto)
+
+Fuente de producto: vault Obsidian `~/Escritorio/projects/obsidian-vault`.
+Nota canónica: `Propuestas Aleph Ago 2026.md`. Vertical activo: **agro / QVAC**.
+
+## Cómo se trabaja
+
+- Orquestar SDD. Decidir stack, nombres, slices y defaults. No preguntar por preferencias ya resueltas.
+- Artifact store: `engram`. Delivery: `auto-chain`. Commits solo si el humano lo pide.
+- Código del hackathon: **greenfield**. No copiar Zafra AI ni VitisTrust (regla Aleph: work must begin at start).
+- Dominio agro del vault (NOA, remitos, conectividad nula) sí se usa como contexto.
+
+## Única pausa (riesgo Alto)
+
+Parar solo si:
+
+1. Secretos, deploy a prod, o git destructivo
+2. Usar código preexistente (riesgo de descalificación)
+3. Cambiar de vertical (dejar agro / QVAC por Pear u otro)
+4. Envío DoraHacks / identidad de equipo / video de demo
+
+Formato: `Riesgo: ALTO — [motivo]` + plan de 2–4 bullets.
+
+## Defaults agro (ya decididos)
+
+- Producto: agente local de remitos agrícolas (QVAC), offline-first
+- Stack: Python 3.11+, FastAPI localhost, SQLite, `tetherto-qvac-sdk`
+- UI: HTML/Jinja mínima (no Next.js en el MVP de 48h)
+- Inferencia: solo QVAC local (OCR + LLM 1–4B + tool use). Cero cloud LLM
+- Sync/P2P/Postgres: fuera del MVP
+- Siguiente vertical (Pear triage): no empezar hasta archivar agro o pedido explícito

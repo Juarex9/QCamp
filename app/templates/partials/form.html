@@ -1,0 +1,55 @@
+{% set values = form if form is defined and form else {} %}
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+{% if duplicates %}
+<div class="dupe-warning" role="alert">
+  <p class="dupe-title">Posible duplicado</p>
+  <ul class="dupe-list">
+    {% for dup in duplicates[:3] %}
+    <li>
+      #{{ dup.id }} — {{ dup.fecha or "sin fecha" }} ·
+      {{ dup.patente or "sin patente" }} · {{ dup.tonelaje_kg | kg }} kg
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="dupe-hint">
+    Si es otro viaje del mismo camión, guardalo igual. Si escaneaste el
+    mismo ticket dos veces, descartá.
+  </p>
+</div>
+{% endif %}
+{% if image_path %}<p class="image-path">{{ image_path }}</p>{% endif %}
+<form
+  class="remito-form"
+  method="post"
+  action="/remitos"
+  enctype="multipart/form-data"
+  hx-post="/remitos"
+  hx-target="#form-slot"
+  hx-swap="innerHTML"
+>
+  <label>fecha<input name="fecha" value="{{ values.fecha or '' }}"></label>
+  <label>patente<input name="patente" value="{{ values.patente or '' }}"></label>
+  <label>kg<input name="tonelaje_kg" value="{{ values.tonelaje_kg | kg }}"></label>
+  <label>origen<input name="origen" value="{{ values.origen or '' }}"></label>
+  <label>destino<input name="destino" value="{{ values.destino or '' }}"></label>
+  <label>producto<input name="producto" value="{{ values.producto or '' }}"></label>
+  <label>humedad<input name="humedad" value="{{ values.humedad or '' }}"></label>
+  <label class="field--wide">raw_ocr<textarea name="raw_ocr" readonly>{{ values.raw_ocr or '' }}</textarea></label>
+  <input type="hidden" name="image_path" value="{{ image_path or values.image_path or '' }}">
+  <input type="hidden" name="confidence" value="{{ values.confidence or '' }}">
+  {% if duplicates %}
+  <input type="hidden" name="confirm_duplicate" value="1">
+  <div class="form-actions">
+    <button class="btn" type="submit">Es otro viaje — guardar igual</button>
+    <button
+      class="btn btn--ghost"
+      type="button"
+      hx-get="/remitos/nuevo"
+      hx-target="#form-slot"
+      hx-swap="innerHTML"
+    >Descartar</button>
+  </div>
+  {% else %}
+  <button class="btn" type="submit">Guardar remito</button>
+  {% endif %}
+</form>

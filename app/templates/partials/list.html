@@ -1,0 +1,23 @@
+<div class="ledger">
+  <table class="remitos">
+    <thead>
+      <tr>
+        <th>fecha</th>
+        <th>patente</th>
+        <th>kg</th>
+        <th>producto</th>
+        <th>origen</th>
+        <th>destino</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="remitos-table-body">
+      {% for remito in remitos %}
+        {% include "partials/row.html" %}
+      {% endfor %}
+      <tr class="empty-row">
+        <td class="empty" colspan="7">Todavía no cargaste remitos.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

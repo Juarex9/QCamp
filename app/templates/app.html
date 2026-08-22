@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Qcamp — cargar remitos{% endblock %}
+
+{% block chrome %}
+<header class="topbar">
+  <a class="wordmark" href="/"><span>Q</span><span>camp</span></a>
+  <div class="topbar__spacer"></div>
+  <nav>
+    <a href="/">Inicio</a>
+  </nav>
+  {% include "partials/theme-toggle.html" %}
+</header>
+{% include "partials/banner.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="workspace">
+  <section class="column column--capture">
+    <div class="panel upload" id="upload">
+      <h2 class="panel__title">Capturar ticket</h2>
+      <form
+        method="post"
+        action="/remitos"
+        enctype="multipart/form-data"
+        hx-post="/remitos"
+        hx-target="#form-slot"
+        hx-swap="innerHTML"
+      >
+        <label class="dropzone">
+          <span class="dropzone__icon" aria-hidden="true">[ + ]</span>
+          <span class="dropzone__label">Foto del remito</span>
+          <span class="dropzone__hint">Se procesa en el dispositivo</span>
+          <input type="file" name="photo" accept="image/*">
+        </label>
+        <button class="btn" type="submit">Procesar foto</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2 class="panel__title">Campos del remito</h2>
+      <div id="form-slot">
+        {% include "partials/form.html" %}
+      </div>
+    </div>
+  </section>
+
+  <section class="column column--ledger">
+    <div id="resumen-slot">
+      {% include "partials/resumen.html" %}
+    </div>
+
+    <div class="panel" id="list-section">
+      <h2 class="panel__title">Remitos cargados</h2>
+      <div id="list-slot">
+        {% include "partials/list.html" %}
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

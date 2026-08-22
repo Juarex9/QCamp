@@ -1,0 +1,1335 @@
+/* Qcamp — agro brutalism. Modo oscuro (tierra) y claro (paja).
+   Sin webfonts ni assets remotos. */
+
+:root {
+  /* Acentos — compartidos entre temas */
+  --field: #6aab52;
+  --field-2: #4a8538;
+  --wheat: #d4b86a;
+  --wheat-2: #a89048;
+  --alert: #c46840;
+  --ok: #7cb342;
+
+  --font-mono: "DejaVu Sans Mono", "Liberation Mono", "Ubuntu Mono", Menlo,
+    Consolas, monospace;
+  --font-serif: "DejaVu Serif", "Liberation Serif", Georgia, "Times New Roman",
+    serif;
+
+  --gut: clamp(1rem, 3vw, 2.5rem);
+  --tick: 2px;
+}
+
+/* Oscuro — tierra de noche (default) */
+:root,
+[data-theme="dark"] {
+  --ink: #121008;
+  --ink-2: #1a1510;
+  --slab: #221a12;
+  --slab-2: #2c2218;
+  --line: #433628;
+  --line-soft: #322818;
+
+  --bone: #ebe3cf;
+  --bone-2: #c8b896;
+  --muted: #8a7860;
+  --faint: #5e5040;
+
+  --on-field: #121008;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --grid-opacity: 0.7;
+  --grain-opacity: 0.045;
+  --grain-blend: screen;
+  --led-halo: rgba(255, 255, 255, 0.04);
+  --outline-stroke: var(--bone-2);
+
+  color-scheme: dark;
+}
+
+/* Claro — saco de arpillera / papel de remito al sol */
+[data-theme="light"] {
+  --ink: #f0e8d6;
+  --ink-2: #e6dcc8;
+  --slab: #faf6ee;
+  --slab-2: #f5efe0;
+  --line: #c4b08a;
+  --line-soft: #d8ccb4;
+
+  --bone: #1a1208;
+  --bone-2: #3d3020;
+  --muted: #6b5a44;
+  --faint: #8a7860;
+
+  --on-field: #1a1208;
+  --shadow: rgba(26, 18, 8, 0.14);
+  --grid-opacity: 0.45;
+  --grain-opacity: 0.035;
+  --grain-blend: multiply;
+  --led-halo: rgba(26, 18, 8, 0.08);
+  --outline-stroke: var(--muted);
+
+  color-scheme: light;
+}
+
+:root,
+[data-theme="dark"],
+[data-theme="light"] {
+  --rule: 1px solid var(--line);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Dot-matrix field: the paper under everything. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    var(--line-soft) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+  opacity: var(--grid-opacity);
+}
+
+/* Film grain. Inline SVG so nothing is fetched. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- type scale ---------- */
+
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.eyebrow--field {
+  color: var(--field);
+}
+
+.display {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.86;
+  margin: 0;
+}
+
+.display--hero {
+  font-size: clamp(3.2rem, 13vw, 10.5rem);
+}
+
+.display--outline {
+  color: transparent;
+  -webkit-text-stroke: var(--tick) var(--outline-stroke);
+  text-stroke: var(--tick) var(--outline-stroke);
+}
+
+.section-title {
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 4vw, 2.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0 0 1.5rem;
+}
+
+.lede {
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 2.1vw, 1.45rem);
+  line-height: 1.55;
+  color: var(--bone-2);
+  margin: 0;
+}
+
+.prose {
+  font-family: var(--font-serif);
+  color: var(--bone-2);
+  line-height: 1.65;
+}
+
+.prose strong {
+  color: var(--bone);
+}
+
+.mark {
+  color: var(--field);
+}
+
+/* ---------- chrome ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem var(--gut);
+  border-bottom: var(--rule);
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.95rem;
+}
+
+.wordmark span:last-child {
+  color: var(--field);
+}
+
+.topbar__spacer {
+  flex: 1;
+}
+
+.topbar nav {
+  display: flex;
+  gap: 1.1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.topbar nav a:hover {
+  color: var(--bone);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  background: var(--slab);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.16s, color 0.16s, background 0.16s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--field);
+  color: var(--field);
+  background: var(--slab-2);
+}
+
+[data-theme="dark"] .theme-toggle__label--to-light {
+  display: inline;
+}
+
+[data-theme="dark"] .theme-toggle__label--to-dark {
+  display: none;
+}
+
+[data-theme="light"] .theme-toggle__label--to-light {
+  display: none;
+}
+
+[data-theme="light"] .theme-toggle__label--to-dark {
+  display: inline;
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.4rem;
+  border: var(--tick) solid var(--bone);
+  background: transparent;
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, transform 0.16s;
+}
+
+.btn:hover {
+  background: var(--bone);
+  color: var(--ink);
+  transform: translate(-2px, -2px);
+}
+
+.btn--solid {
+  border-color: var(--field);
+  background: var(--field);
+  color: var(--on-field);
+  box-shadow: 6px 6px 0 var(--field-2);
+}
+
+.btn--solid:hover {
+  background: var(--bone);
+  border-color: var(--bone);
+  color: var(--ink);
+  box-shadow: 8px 8px 0 var(--field-2);
+}
+
+.btn--ghost {
+  border-color: var(--line);
+  color: var(--bone-2);
+}
+
+.btn--sm {
+  padding: 0.55rem 0.95rem;
+  font-size: 0.68rem;
+}
+
+:where(a, button, input, textarea, summary):focus-visible {
+  outline: var(--tick) solid var(--field);
+  outline-offset: 3px;
+}
+
+/* ---------- landing: hero ---------- */
+
+.hero {
+  position: relative;
+  padding: clamp(2.5rem, 7vw, 6rem) var(--gut) clamp(2rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: end;
+  border-bottom: var(--rule);
+}
+
+.hero__head {
+  min-width: 0;
+}
+
+.hero__title {
+  margin: 1.2rem 0 0;
+}
+
+.hero__title span {
+  display: block;
+}
+
+.hero__sub {
+  max-width: 34ch;
+  margin-top: 1.75rem;
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2.25rem;
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2.75rem;
+  padding-top: 1.1rem;
+  border-top: var(--rule);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* Ticket mock: perforated, offset, stamped. */
+.hero__aside {
+  position: relative;
+  min-width: 0;
+}
+
+.ticket {
+  position: relative;
+  background: var(--slab);
+  border: var(--rule);
+  border-radius: 2px;
+  padding: 1.4rem 1.3rem 1.6rem;
+  box-shadow: 14px 14px 0 var(--shadow);
+}
+
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-image: radial-gradient(
+    circle at 5px 4px,
+    var(--ink) 4px,
+    transparent 4.5px
+  );
+  background-size: 14px 8px;
+}
+
+.ticket::before {
+  top: -1px;
+}
+
+.ticket::after {
+  bottom: -1px;
+}
+
+.ticket__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ticket__rows {
+  margin: 0.9rem 0 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.ticket__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.82rem;
+  padding: 0.18rem 0;
+}
+
+.ticket__row dt {
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+}
+
+.ticket__row dd {
+  margin: 0;
+  color: var(--bone);
+}
+
+.ticket__total {
+  border-top: 1px dashed var(--line);
+  padding-top: 0.9rem;
+}
+
+.ticket__total .num {
+  display: block;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--field);
+}
+
+.ticket__total .unit {
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Sits above the ticket edge, not over it: keeps `right` positive so the
+   rotated box never overflows the viewport on narrow screens. */
+.stamp {
+  position: absolute;
+  right: 0.5rem;
+  top: -2.5rem;
+  transform: rotate(-11deg);
+  border: var(--tick) solid var(--field);
+  color: var(--field);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+  background: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+/* ---------- marquee ---------- */
+
+.marquee {
+  overflow: hidden;
+  border-bottom: var(--rule);
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: slide 26s linear infinite;
+}
+
+.marquee__track span {
+  padding: 0.55rem 1.1rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- landing: sections ---------- */
+
+.band {
+  padding: clamp(3rem, 8vw, 6rem) var(--gut);
+  border-bottom: var(--rule);
+}
+
+.band--split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.band--slab {
+  background: var(--ink-2);
+}
+
+.pain {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.pain__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding-bottom: 1.1rem;
+  border-bottom: var(--rule);
+}
+
+.pain__item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.pain__item b {
+  color: var(--field);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding-top: 0.35rem;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0;
+  border: var(--rule);
+}
+
+.step {
+  padding: 1.6rem 1.4rem 1.8rem;
+  border-right: var(--rule);
+  position: relative;
+  background: var(--slab);
+}
+
+.step:last-child {
+  border-right: 0;
+}
+
+.step__num {
+  font-size: clamp(2.6rem, 7vw, 4.2rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: var(--tick) var(--line);
+  text-stroke: var(--tick) var(--line);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.step h3 {
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.step p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.step:hover .step__num {
+  -webkit-text-stroke-color: var(--field);
+  text-stroke-color: var(--field);
+}
+
+/* Tool-chain diagram: the reliability story. */
+.chain {
+  display: grid;
+  gap: 0.8rem;
+  font-size: 0.82rem;
+}
+
+.chain__step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border: var(--rule);
+  background: var(--slab);
+}
+
+.chain__step code {
+  color: var(--wheat);
+}
+
+.chain__tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid currentColor;
+  color: var(--muted);
+}
+
+.chain__step--block {
+  border-color: var(--field-2);
+}
+
+.chain__step--block .chain__tag {
+  color: var(--alert);
+}
+
+.specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.specs th,
+.specs td {
+  text-align: left;
+  padding: 0.7rem 0.6rem;
+  border-bottom: var(--rule);
+  vertical-align: top;
+}
+
+.specs th {
+  color: var(--faint);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.specs td code {
+  color: var(--wheat);
+}
+
+.closer {
+  padding: clamp(3.5rem, 9vw, 7rem) var(--gut);
+  text-align: center;
+}
+
+.closer .display {
+  font-size: clamp(2.2rem, 9vw, 6rem);
+}
+
+.closer .btn {
+  margin-top: 2.25rem;
+}
+
+.footer {
+  padding: 1.5rem var(--gut) 2.5rem;
+  border-top: var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ---------- app shell ---------- */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 0;
+  /* Stretch so the divider and the capture panel reach the fold instead of
+     stopping wherever the form happens to end. */
+  align-items: stretch;
+  min-height: calc(100vh - 5.5rem);
+}
+
+.column {
+  padding: clamp(1.25rem, 3vw, 2.25rem) var(--gut);
+  min-width: 0;
+}
+
+.column--capture {
+  border-right: var(--rule);
+  background: var(--ink-2);
+}
+
+.panel {
+  margin: 0 0 2rem;
+}
+
+.panel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.panel__title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* Status LEDs keep the raw flags visible — the machine state is the ornament. */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0.55rem var(--gut);
+  border-bottom: var(--rule);
+  background: var(--slab);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.banner code {
+  color: var(--bone-2);
+}
+
+.banner .led {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.banner .led::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--faint);
+  box-shadow: 0 0 0 3px var(--led-halo);
+}
+
+.banner .led--on::before {
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+}
+
+.banner .led--off::before {
+  background: var(--field-2);
+}
+
+.banner .fallback {
+  color: var(--wheat);
+}
+
+.banner__host {
+  margin-left: auto;
+  color: var(--faint);
+  letter-spacing: 0.14em;
+}
+
+/* ---------- dropzone ---------- */
+
+.dropzone {
+  display: block;
+  position: relative;
+  border: var(--tick) dashed var(--line);
+  background: var(--slab);
+  padding: clamp(1.4rem, 4vw, 2.4rem) 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.16s, background 0.16s;
+}
+
+.dropzone:hover {
+  border-color: var(--field);
+  background: var(--slab-2);
+}
+
+.dropzone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dropzone__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--field);
+}
+
+.dropzone__label {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dropzone__hint {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--faint);
+  letter-spacing: 0.08em;
+}
+
+.upload form > .btn {
+  margin-top: 0.9rem;
+  width: 100%;
+  justify-content: center;
+}
+
+/* ---------- forms ---------- */
+
+.remito-form,
+.edit-form {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.remito-form {
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+label {
+  display: block;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--line);
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  border-radius: 0;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--field);
+  outline: none;
+  background: var(--slab-2);
+}
+
+input[readonly],
+textarea[readonly] {
+  color: var(--bone-2);
+  background: var(--slab);
+}
+
+textarea {
+  min-height: 5rem;
+  resize: vertical;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* kg is the number that matters: give it weight. */
+.remito-form label:nth-child(3) input {
+  color: var(--field);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.remito-form > label:has(textarea),
+.remito-form > .field--wide {
+  grid-column: 1 / -1;
+}
+
+.remito-form button,
+.edit-form button {
+  grid-column: 1 / -1;
+  justify-content: center;
+  border-color: var(--field);
+  background: var(--field);
+  color: var(--on-field);
+}
+
+.remito-form button:hover,
+.edit-form button:hover {
+  background: var(--bone);
+  border-color: var(--bone);
+  color: var(--ink);
+}
+
+.error {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.9rem;
+  border-left: var(--tick) solid var(--alert);
+  background: color-mix(in srgb, var(--alert) 12%, transparent);
+  color: var(--alert);
+  font-size: 0.8rem;
+}
+
+.dupe-warning {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1rem;
+  border: var(--tick) dashed var(--wheat);
+  background: color-mix(in srgb, var(--wheat) 10%, transparent);
+}
+
+.dupe-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--wheat);
+}
+
+.dupe-list {
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.dupe-list li {
+  padding: 0.2rem 0;
+}
+
+.dupe-hint {
+  margin: 0;
+  font-size: 0.74rem;
+  opacity: 0.75;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.remito-form > .form-actions {
+  grid-column: 1 / -1;
+}
+
+.remito-form .form-actions button[type="submit"] {
+  flex: 1 1 14rem;
+}
+
+.btn--ghost {
+  border-style: dashed;
+  opacity: 0.8;
+}
+
+.remito-form .form-actions .btn--ghost {
+  background: transparent;
+  color: var(--wheat);
+  border-color: var(--wheat);
+  border-style: dashed;
+}
+
+.remito-form .form-actions .btn--ghost:hover {
+  background: var(--wheat);
+  color: var(--bone);
+  border-style: solid;
+}
+
+.image-path {
+  margin: 0 0 0.8rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  word-break: break-all;
+}
+
+.trace {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+}
+
+.trace span {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+/* ---------- readout ---------- */
+
+.resumen {
+  border: var(--rule);
+  background: var(--slab);
+  padding: 1.3rem 1.4rem 1.5rem;
+  margin: 0 0 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.resumen::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--field) 0 12px,
+    transparent 12px 24px
+  );
+}
+
+.resumen h2 {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.readout {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0.5rem 0 0;
+}
+
+.readout__num {
+  font-size: clamp(2.6rem, 8vw, 4.4rem);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.045em;
+  color: var(--field);
+  font-variant-numeric: tabular-nums;
+}
+
+.readout__unit {
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.resumen__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  margin: 1rem 0 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.resumen__meta p {
+  margin: 0;
+}
+
+.resumen__meta b {
+  color: var(--bone-2);
+}
+
+/* ---------- ledger ---------- */
+
+.ledger {
+  overflow-x: auto;
+  border: var(--rule);
+  background: var(--slab);
+}
+
+table.remitos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+table.remitos thead th {
+  position: sticky;
+  top: 0;
+  text-align: left;
+  padding: 0.6rem 0.7rem;
+  border-bottom: var(--rule);
+  background: var(--slab-2);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+table.remitos td {
+  padding: 0.65rem 0.7rem;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+
+.remito-row:hover > td {
+  background: var(--slab-2);
+}
+
+.remito-row .patente {
+  letter-spacing: 0.08em;
+  color: var(--bone);
+}
+
+.remito-row .kg {
+  color: var(--field);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.remito-row .fecha,
+.remito-row .origen,
+.remito-row .destino,
+.remito-row .producto {
+  color: var(--bone-2);
+}
+
+.empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--faint);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+}
+
+/* The placeholder is the last child, so any inserted row hides it —
+   including rows HTMX prepends without a full re-render. */
+.remito-row ~ .empty-row {
+  display: none;
+}
+
+details.editor {
+  font-size: 0.78rem;
+}
+
+details.editor summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 0.25rem 0.55rem;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+details.editor summary::-webkit-details-marker {
+  display: none;
+}
+
+details.editor summary:hover {
+  color: var(--field);
+  border-color: var(--field);
+}
+
+details.editor[open] > summary {
+  color: var(--field);
+  border-color: var(--field);
+  margin-bottom: 0.9rem;
+}
+
+details.editor .edit-form {
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  min-width: min(30rem, 60vw);
+}
+
+.raw-ocr {
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--ink);
+  border-left: var(--tick) solid var(--line);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted);
+  max-height: 12rem;
+  overflow: auto;
+}
+
+/* ---------- entrance choreography ---------- */
+
+/* Deliberately short: these elements start at opacity 0, so a long stagger
+   would leave the pitch headline blank for most of a second. */
+.reveal {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.reveal:nth-child(1) {
+  animation-delay: 0.03s;
+}
+.reveal:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.reveal:nth-child(3) {
+  animation-delay: 0.13s;
+}
+.reveal:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.reveal:nth-child(5) {
+  animation-delay: 0.23s;
+}
+
+/* Transform only, no opacity: the hero copy must be painted on the first
+   frame. Fading it in makes the pitch blank for any early paint. */
+@keyframes rise {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 60rem) {
+  .hero,
+  .band--split,
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero {
+    align-items: start;
+  }
+
+  /* Stacked columns size to content; stretching would pad dead space. */
+  .workspace {
+    min-height: 0;
+  }
+
+  .hero__aside {
+    order: -1;
+  }
+
+  .column--capture {
+    border-right: 0;
+    border-bottom: var(--rule);
+  }
+
+  .step {
+    border-right: 0;
+    border-bottom: var(--rule);
+  }
+
+  .step:last-child {
+    border-bottom: 0;
+  }
+
+  .topbar nav {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    /* Without this the staggered reveals stay at opacity 0 for their delay. */
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

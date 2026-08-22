@@ -1,0 +1,8 @@
+<p class="banner" id="banner">
+  <span class="led {{ 'led--on' if ocr_ready else 'led--off' }}"><code>ocr_ready={{ "true" if ocr_ready else "false" }}</code></span>
+  <span class="led {{ 'led--on' if llm_ready else 'led--off' }}"><code>llm_ready={{ "true" if llm_ready else "false" }}</code></span>
+  {%- if not ocr_ready and not llm_ready %}
+  <span class="fallback">— carga manual</span>
+  {%- endif %}
+  <span class="banner__host">{{ banner_host | default("127.0.0.1 · nada sale del equipo", true) }}</span>
+</p>

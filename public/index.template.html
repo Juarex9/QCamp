@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Qcamp — demo en la nube. App completa en Render.">
+  <title>Qcamp — presentación</title>
+  <link rel="stylesheet" href="__BACKEND_URL__/static/app.css">
+  <script>
+    (function () {
+      var k = "qcamp-theme";
+      var s = localStorage.getItem(k);
+      var t = s || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="wordmark" href="/"><span>Q</span><span>camp</span></a>
+    <div class="topbar__spacer"></div>
+    <span class="eyebrow" style="margin:0">Vercel · landing</span>
+  </header>
+  <main>
+    <section class="hero" style="padding: clamp(2rem, 6vw, 4rem) var(--gut);">
+      <div class="hero__head">
+        <p class="eyebrow eyebrow--field">Aleph 2026 · demo online</p>
+        <h1 class="display display--hero hero__title">
+          <span>Q</span>
+          <span class="display--outline">camp</span>
+        </h1>
+        <p class="lede hero__sub">
+          Esta página está en <strong>Vercel</strong>. La app (formulario, tabla,
+          totales) corre en <strong>Render</strong> con SQLite en disco.
+          QVAC on-device queda para la demo local en notebook.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--solid" href="__BACKEND_URL__/app">Abrir la app en Render →</a>
+          <a class="btn btn--ghost" href="__BACKEND_URL__/health">Health check</a>
+        </div>
+        <div class="hero__meta">
+          <span>Backend: __BACKEND_URL__</span>
+          <span>REMITO_QVAC=0 en cloud</span>
+          <span>Seed demo al arrancar</span>
+        </div>
+      </div>
+    </section>
+    <section class="band">
+      <p class="eyebrow">Presentación vs producto</p>
+      <h2 class="section-title">Dos URLs, un mismo repo</h2>
+      <table class="specs">
+        <tr>
+          <th>Vercel</th>
+          <td>Landing estática para el jurado (esta página).</td>
+        </tr>
+        <tr>
+          <th>Render</th>
+          <td>FastAPI + HTMX + SQLite (<code>/app</code>, <code>/remitos</code>).</td>
+        </tr>
+        <tr>
+          <th>Notebook</th>
+          <td><code>make demo</code> con QVAC y modo avión — pitch offline real.</td>
+        </tr>
+      </table>
+    </section>
+  </main>
+  <footer class="footer">
+    <span>Qcamp · Aleph Hackathon 2026</span>
+    <span><a href="__BACKEND_URL__/">Backend landing</a></span>
+  </footer>
+</body>
+</html>

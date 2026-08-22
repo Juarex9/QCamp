@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Qcamp — la libreta del productor, sin señal{% endblock %}
+
+{% block chrome %}
+<header class="topbar">
+  <a class="wordmark" href="/"><span>Q</span><span>camp</span></a>
+  <div class="topbar__spacer"></div>
+  <nav>
+    <a href="#problema">Problema</a>
+    <a href="#como">Cómo funciona</a>
+    <a href="#agente">Agente</a>
+    <a href="#stack">Stack</a>
+  </nav>
+  {% include "partials/theme-toggle.html" %}
+  <a class="btn btn--sm btn--solid" href="/app">Abrir la app</a>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero__head">
+    <p class="eyebrow eyebrow--field reveal">Aleph 2026 · QVAC Track</p>
+    <h1 class="display display--hero hero__title reveal">
+      <span>Q</span>
+      <span class="display--outline">camp</span>
+    </h1>
+    <p class="lede hero__sub reveal">
+      La libreta del productor en el notebook. Subís la foto del ticket de balanza
+      y los kg quedan en el equipo:
+      <strong>sin señal, sin nube, sin API keys</strong>.
+    </p>
+    <div class="hero__cta reveal">
+      <a class="btn btn--solid" href="/app">Abrir la app →</a>
+      <a class="btn btn--ghost" href="#como">Ver cómo funciona</a>
+    </div>
+    <div class="hero__meta reveal">
+      <span>OCR + agente 1B on-device</span>
+      <span>SQLite local</span>
+      <span>127.0.0.1</span>
+    </div>
+  </div>
+
+  <aside class="hero__aside">
+    <div class="ticket">
+      <div class="stamp">Offline<br>On-device</div>
+      <div class="ticket__head">
+        <span>Ticket · Balanza</span>
+        <span>Extraído</span>
+      </div>
+      <dl class="ticket__rows">
+        <div class="ticket__row"><dt>Fecha</dt><dd>2026-08-22</dd></div>
+        <div class="ticket__row"><dt>Patente</dt><dd>AB123CD</dd></div>
+        <div class="ticket__row"><dt>Producto</dt><dd>Soja</dd></div>
+        <div class="ticket__row"><dt>Origen</dt><dd>Lote 7 — Tucumán</dd></div>
+        <div class="ticket__row"><dt>Humedad</dt><dd>13,4 %</dd></div>
+      </dl>
+      <div class="ticket__total">
+        <span class="unit">Neto del viaje</span>
+        <span class="num">28.740</span>
+        <span class="unit">kilogramos</span>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>Sin nube ·</span><span>Sin API keys ·</span>
+    <span>Los kg no salen del equipo ·</span><span>Modo avión ·</span>
+    <span>Total del día ·</span>
+    <span>Sin nube ·</span><span>Sin API keys ·</span>
+    <span>Los kg no salen del equipo ·</span><span>Modo avión ·</span>
+    <span>Total del día ·</span>
+  </div>
+</div>
+
+<section class="band band--split" id="problema">
+  <div>
+    <p class="eyebrow">01 · El problema</p>
+    <h2 class="section-title">El dato existe.<br>El productor no lo tiene.</h2>
+    <p class="prose">
+      El acopio ya digitaliza cuando pesa. El productor se lleva
+      <strong>una copia en papel</strong> que viaja en la guantera. Recién a la
+      noche, en el pueblo y con señal, alguien se sienta a cargar quince
+      tickets a mano.
+    </p>
+  </div>
+  <div class="pain">
+    <div class="pain__item">
+      <b>[ 01 ]</b>
+      <p class="prose">
+        Quince tickets acumulados en la camioneta y ninguna forma de saber
+        <strong>cuánto salió hoy</strong> del lote.
+      </p>
+    </div>
+    <div class="pain__item">
+      <b>[ 02 ]</b>
+      <p class="prose">
+        En el campo del NOA no hay señal. Cualquier app que dependa de la nube
+        <strong>no funciona donde está el papel</strong>.
+      </p>
+    </div>
+    <div class="pain__item">
+      <b>[ 03 ]</b>
+      <p class="prose">
+        La liquidación es información sensible. Mandarla a un modelo remoto
+        para leer un número es <strong>un costo y un riesgo evitable</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="como">
+  <p class="eyebrow">02 · Cómo funciona</p>
+  <h2 class="section-title">Tres pasos, cero conexión</h2>
+  <div class="steps">
+    <article class="step">
+      <span class="step__num">01</span>
+      <h3>Subí la foto</h3>
+      <p>
+        La copia del ticket desde el notebook: arrugada, carbónico, a contraluz.
+        El OCR corre en el mismo equipo (<code>127.0.0.1</code>).
+      </p>
+    </article>
+    <article class="step">
+      <span class="step__num">02</span>
+      <h3>El agente extrae</h3>
+      <p>
+        Un modelo de 1B usa tools para sacar fecha, patente, neto en kg,
+        producto y humedad. Vos confirmás en pantalla.
+      </p>
+    </article>
+    <article class="step">
+      <span class="step__num">03</span>
+      <h3>Mirá el total</h3>
+      <p>
+        Cada remito se guarda en SQLite local. El acumulado del día se
+        actualiza al instante, siga sin haber señal.
+      </p>
+    </article>
+  </div>
+</section>
+
+<section class="band band--split band--slab" id="agente">
+  <div>
+    <p class="eyebrow">03 · Confiabilidad</p>
+    <h2 class="section-title">Un modelo chico que no inventa</h2>
+    <p class="prose">
+      Un 1B alcanza para leer un ticket, pero <strong>no le alcanza la
+      palabra</strong>. Así que el agente no persiste lo que dice: persiste lo
+      que extrajo. La cadena está forzada en dos turnos y el kilaje queda
+      congelado entre uno y otro.
+    </p>
+    <p class="prose">
+      Si el modelo cambia el neto al momento de guardar, la escritura
+      <strong>se rechaza</strong> y el remito vuelve al formulario para que lo
+      confirme una persona.
+    </p>
+  </div>
+  <div class="chain">
+    <div class="chain__step">
+      <span class="chain__tag">Turno 1</span>
+      <span><code>extract_remito(raw_ocr)</code> — parsea el texto del OCR. Sin escritura.</span>
+    </div>
+    <div class="chain__step">
+      <span class="chain__tag">Guard</span>
+      <span>Sin <code>tonelaje_kg</code> válido, la cadena se detiene acá.</span>
+    </div>
+    <div class="chain__step">
+      <span class="chain__tag">Turno 2</span>
+      <span><code>save_remito(campos)</code> — inserta en SQLite.</span>
+    </div>
+    <div class="chain__step chain__step--block">
+      <span class="chain__tag">Rechazo</span>
+      <span>Si los kg no coinciden con el extract, no se guarda nada.</span>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="stack">
+  <p class="eyebrow">04 · Stack</p>
+  <h2 class="section-title">Todo corre acá</h2>
+  <table class="specs">
+    <tr>
+      <th>OCR</th>
+      <td><code>OCR_LATIN</code> — texto latino impreso y matricial, en el dispositivo.</td>
+    </tr>
+    <tr>
+      <th>Agente</th>
+      <td><code>LLAMA_3_2_1B_INST_Q4_0</code> — 1B cuantizado, instruct, con tool use.</td>
+    </tr>
+    <tr>
+      <th>Runtime</th>
+      <td>QVAC worker local. <code>REMITO_QVAC=0</code> para demo sin modelos.</td>
+    </tr>
+    <tr>
+      <th>Datos</th>
+      <td>SQLite en WAL. Nada sale del equipo: no hay sync ni telemetría.</td>
+    </tr>
+    <tr>
+      <th>Servidor</th>
+      <td>FastAPI en <code>127.0.0.1:8000</code>. Sin dependencias remotas.</td>
+    </tr>
+  </table>
+</section>
+
+<section class="closer">
+  <p class="eyebrow eyebrow--field">Listo para cosecha</p>
+  <h2 class="display">Cargá el<br><span class="display--outline">primer remito</span></h2>
+  <a class="btn btn--solid" href="/app">Abrir la app →</a>
+</section>
+{% endblock %}
+
+{% block after %}
+<footer class="footer">
+  <span>Qcamp · Aleph Hackathon 2026</span>
+  <span>QVAC Track · on-device</span>
+</footer>
+{% endblock %}

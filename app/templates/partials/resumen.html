@@ -1,0 +1,12 @@
+<div id="resumen" class="resumen" hx-get="/resumen" hx-trigger="remitoSaved from:body" hx-swap="outerHTML">
+  <h2>Resumen{% if resumen.fecha %} · {{ resumen.fecha }}{% endif %}</h2>
+  <p class="readout">
+    <span class="readout__num">{{ resumen.total_kg | kg }}</span>
+    <span class="readout__unit">kg acumulados</span>
+  </p>
+  <div class="resumen__meta">
+    <p>Remitos: <b>{{ resumen.count }}</b></p>
+    {% if resumen.fecha %}<p>fecha: <b>{{ resumen.fecha }}</b></p>{% endif %}
+    <p>Guardado local</p>
+  </div>
+</div>

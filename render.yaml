@@ -1,0 +1,33 @@
+# Render Web Service — backend FastAPI (UI + API en /app).
+# Docs: docs/deploy.md
+
+services:
+  - type: web
+    name: qcamp
+    runtime: python
+    plan: free
+    buildCommand: pip install -e .
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    disk:
+      name: qcamp-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: REMITO_HOST
+        value: "0.0.0.0"
+      - key: REMITO_DB_PATH
+        value: /var/data/remitos.db
+      - key: REMITO_IMAGES_DIR
+        value: /var/data/images
+      - key: REMITO_QVAC
+        value: "0"
+      - key: REMITO_SEED_DEMO
+        value: "1"
+      - key: REMITO_PUBLIC_LABEL
+        value: "Render · demo cloud · QVAC local en notebook"
+      # Tras el primer deploy, pegá acá la URL pública de Render:
+      # - key: REMITO_BACKEND_URL
+      #   value: https://qcamp.onrender.com

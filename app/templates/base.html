@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#121008">
+  <meta name="description" content="Qcamp digitaliza remitos de cosecha con IA local en notebook/PC, sin señal y sin nube.">
+  <title>{% block title %}Qcamp{% endblock %}</title>
+  <script>
+    (function () {
+      var k = "qcamp-theme";
+      var s = localStorage.getItem(k);
+      var t =
+        s ||
+        (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.dataset.theme = t;
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.content = t === "light" ? "#f0e8d6" : "#121008";
+    })();
+  </script>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/theme.js" defer></script>
+  <script src="/static/htmx.js" defer></script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  {% block chrome %}{% endblock %}
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  {% block after %}{% endblock %}
+</body>
+</html>
